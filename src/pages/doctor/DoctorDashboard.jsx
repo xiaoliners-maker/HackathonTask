@@ -81,7 +81,7 @@ export default function DoctorDashboard() {
       {/* Header */}
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="page-title">Good morning, {currentUser?.name?.split(' ')[0]} 👋</h1>
+          <h1 className="page-title">Good morning, {currentUser?.name?.split(' ')[0]} </h1>
           <p className="text-slate-500 text-sm mt-1">Here's your patient panel overview for today.</p>
         </div>
         <Link to="/doctor/alerts" className="btn-secondary relative">

@@ -53,9 +53,9 @@ export default function PatientHistory() {
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {[
           { label: `${days}-day Avg`, value: `${avg}%`, sub: trend > 0 ? `+${trend}% vs prev period` : trend < 0 ? `${trend}% vs prev period` : 'No change', icon: trend > 0 ? <TrendingUp size={16} className="text-emerald-500" /> : trend < 0 ? <TrendingDown size={16} className="text-red-500" /> : <Minus size={16} className="text-slate-400" />, color: trend > 0 ? 'text-emerald-600' : trend < 0 ? 'text-red-600' : 'text-slate-500' },
-          { label: 'Best Day', value: `${best}%`, sub: 'Highest single day', icon: '🏆', color: 'text-amber-600' },
-          { label: 'Streak', value: `${patient.streak}d`, sub: 'Current streak', icon: '🔥', color: 'text-orange-500' },
-          { label: 'Perfect Days', value: perfect, sub: `In last ${days} days`, icon: '⭐', color: 'text-blue-600' },
+          { label: 'Best Day', value: `${best}%`, sub: 'Highest single day', icon: '', color: 'text-amber-600' },
+          { label: 'Streak', value: `${patient.streak}d`, sub: 'Current streak', icon: '', color: 'text-orange-500' },
+          { label: 'Perfect Days', value: perfect, sub: `In last ${days} days`, icon: '', color: 'text-blue-600' },
         ].map((k) => (
           <div key={k.label} className="card p-4">
             <div className="flex items-center gap-1.5 mb-2">

@@ -106,7 +106,7 @@ export default function PatientToday() {
       <div className="flex items-start justify-between">
         <div>
           <p className="text-slate-500 text-sm">{format(new Date(), 'EEEE, MMMM d')}</p>
-          <h1 className="page-title">{greeting()}, {patient.name.split(' ')[0]} 👋</h1>
+          <h1 className="page-title">{greeting()}, {patient.name.split(' ')[0]} </h1>
         </div>
         <Avatar initials={patient.avatar} size="lg" />
       </div>
