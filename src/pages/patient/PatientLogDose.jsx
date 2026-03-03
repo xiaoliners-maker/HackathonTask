@@ -42,9 +42,13 @@ export default function PatientLogDose() {
           <div className="space-y-3">
             {pending.map((item) => (
               <div key={item.key} className="card p-4 flex items-center gap-4">
-                <div className="w-12 h-12 rounded-xl flex-shrink-0 flex items-center justify-center text-xl" style={{ backgroundColor: item.med.color + '20' }}>
-                  💊
-                </div>
+<div className="w-12 h-12 rounded-xl flex-shrink-0 flex items-center justify-center" style={{ backgroundColor: item.med.color + '20' }}>
+  <img 
+    src="https://cdn-icons-png.flaticon.com/512/655/655968.png" 
+    alt="medicine" 
+    className="w-7 h-7 object-contain"
+  />
+</div>
                 <div className="flex-1 min-w-0">
                   <p className="font-semibold text-slate-800">{item.med.name} {item.med.dosage}</p>
                   <p className="text-xs text-slate-500">Scheduled for {item.time}</p>

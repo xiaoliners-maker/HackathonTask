@@ -21,9 +21,13 @@ export default function PatientMedications() {
             <div key={pm.id} className="card p-5">
               {/* Header */}
               <div className="flex items-start gap-3 mb-4">
-                <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl flex-shrink-0" style={{ backgroundColor: med.color + '20' }}>
-                  💊
-                </div>
+<div className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0" style={{ backgroundColor: med.color + '20' }}>
+  <img 
+    src="https://cdn-icons-png.flaticon.com/512/655/655968.png" 
+    alt="medicine" 
+    className="w-7 h-7 object-contain"
+  />
+</div>
                 <div>
                   <h3 className="font-display font-bold text-slate-800 text-lg">{med.name}</h3>
                   <p className="text-sm text-slate-500">{med.dosage} · {med.category}</p>

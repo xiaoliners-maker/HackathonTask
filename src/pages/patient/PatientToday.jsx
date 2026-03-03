@@ -23,9 +23,14 @@ function DoseCard({ item, onLog }) {
         'bg-white border-surface-200 hover:border-brand-200 hover:bg-brand-50'
       }`}>
         {/* Pill icon */}
-        <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 text-xl" style={{ backgroundColor: item.med.color + '20' }}>
-          💊
-        </div>
+<div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style={{ backgroundColor: item.med.color + '20' }}>
+  <img 
+    src="https://cdn-icons-png.flaticon.com/512/655/655968.png" 
+    alt="medicine" 
+    className="w-7 h-7 object-contain"
+    style={{ filter: `opacity(0.85)` }}
+  />
+</div>
         {/* Info */}
         <div className="flex-1 min-w-0">
           <p className="font-semibold text-slate-800 text-sm">{item.med.name} <span className="text-slate-500 font-normal">{item.med.dosage}</span></p>
