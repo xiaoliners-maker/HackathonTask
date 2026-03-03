@@ -122,7 +122,7 @@ export default function PatientToday() {
           <div>
             <p className="text-brand-100 text-sm mb-1">Today's Progress</p>
             <div className="font-display text-4xl font-bold mb-1">{taken} / {total} doses</div>
-            <p className="text-brand-100 text-sm">{taken === total && total > 0 ? '🎉 All done for today!' : `${total - taken} dose${total - taken !== 1 ? 's' : ''} remaining`}</p>
+            <p className="text-brand-100 text-sm">{taken === total && total > 0 ? 'All done for today!' : `${total - taken} dose${total - taken !== 1 ? 's' : ''} remaining`}</p>
           </div>
           <div className="relative">
             <ProgressRing rate={pct} size={100} stroke={9} color="rgba(255,255,255,0.9)" />
