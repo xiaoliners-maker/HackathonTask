@@ -30,7 +30,7 @@ export default function PatientLogDose() {
         <div className={`flex items-center gap-3 px-4 py-3 rounded-xl border animate-fade-in ${lastLogged.skipped ? 'bg-slate-50 border-slate-200' : 'bg-emerald-50 border-emerald-200'}`}>
           {lastLogged.skipped ? <XCircle size={16} className="text-slate-500" /> : <CheckCircle size={16} className="text-emerald-500" />}
           <p className="text-sm font-medium text-slate-700">
-            {lastLogged.skipped ? `${lastLogged.name} marked as skipped` : `${lastLogged.name} logged! Great job 🎉`}
+            {lastLogged.skipped ? `${lastLogged.name} marked as skipped` : `${lastLogged.name} logged! Great job`}
           </p>
         </div>
       )}
@@ -74,9 +74,13 @@ export default function PatientLogDose() {
           <div className="space-y-2">
             {done.map((item) => (
               <div key={item.key} className={`flex items-center gap-4 p-3 rounded-xl border ${item.skipped ? 'bg-slate-50 border-slate-200 opacity-60' : 'bg-emerald-50 border-emerald-100'}`}>
-                <div className="w-10 h-10 rounded-lg flex-shrink-0 flex items-center justify-center" style={{ backgroundColor: item.med.color + '20' }}>
-                  💊
-                </div>
+<div className="w-10 h-10 rounded-lg flex-shrink-0 flex items-center justify-center" style={{ backgroundColor: item.med.color + '20' }}>
+  <img
+    src="https://cdn-icons-png.flaticon.com/512/655/655968.png"
+    alt="medicine"
+    className="w-6 h-6 object-contain"
+  />
+</div>
                 <div className="flex-1">
                   <p className="text-sm font-semibold text-slate-700">{item.med.name} {item.med.dosage}</p>
                   <p className="text-xs text-slate-500">{item.time} · {item.skipped ? 'Skipped' : `Taken at ${item.loggedAt ? format(new Date(item.loggedAt), 'h:mm a') : '—'}`}</p>
@@ -98,7 +102,6 @@ export default function PatientLogDose() {
 
       {pending.length === 0 && schedule.length > 0 && (
         <div className="card p-10 text-center bg-emerald-50 border-emerald-200">
-          <div className="text-5xl mb-3">🎉</div>
           <p className="font-display font-bold text-emerald-800 text-xl">All doses logged!</p>
           <p className="text-sm text-emerald-600 mt-1">Great job keeping up with your treatment plan.</p>
         </div>

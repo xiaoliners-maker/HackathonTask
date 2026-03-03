@@ -132,7 +132,6 @@ export default function DoctorDashboard() {
           <SectionHeader title="Recent Alerts" action={<Link to="/doctor/alerts" className="text-xs text-brand-600 hover:underline font-medium">See all</Link>} />
           {recentNotifs.length === 0 ? (
             <div className="text-center py-10">
-              <div className="text-3xl mb-2">🎉</div>
               <p className="text-sm text-slate-500">No active alerts</p>
             </div>
           ) : (

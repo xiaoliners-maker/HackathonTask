@@ -133,7 +133,7 @@ export const USERS = [
 export const INITIAL_NOTIFICATIONS = [
   { id: 'n1', type: 'alert',   patientId: 'pat_2', message: 'Robert Cruz missed 3 doses this week',                 time: '2 hours ago',  read: false },
   { id: 'n2', type: 'critical', patientId: 'pat_4', message: 'Jose Dela Cruz — critical adherence drop below 50%', time: '4 hours ago',  read: false },
-  { id: 'n3', type: 'info',    patientId: 'pat_3', message: 'Ana Reyes achieved a 40-day streak! 🎉',               time: '1 day ago',    read: true  },
+  { id: 'n3', type: 'info',    patientId: 'pat_3', message: 'Ana Reyes achieved a 40-day streak!',               time: '1 day ago',    read: true  },
   { id: 'n4', type: 'alert',   patientId: 'pat_4', message: 'No doses logged for Jose Dela Cruz in 48 hours',      time: '2 days ago',   read: true  },
 ];
 
