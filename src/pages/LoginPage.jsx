@@ -14,11 +14,20 @@ const DEMO_ACCOUNTS = [
 export default function LoginPage() {
   const { login } = useApp();
   const navigate = useNavigate();
+  const [mode, setMode] = useState('login'); // 'login' | 'register'
+
+  // Login state
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPass, setShowPass] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  // Register state
+  const [reg, setReg] = useState({ firstName: '', lastName: '', email: '', phone: '', password: '', confirm: '' });
+  const [showRegPass, setShowRegPass] = useState(false);
+  const [regError, setRegError] = useState('');
+  const [regLoading, setRegLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,17 +37,35 @@ export default function LoginPage() {
     const ok = login(email.trim(), password);
     setLoading(false);
     if (!ok) { setError('Invalid email or password. Try a demo account below.'); return; }
-    const user = { email: email.trim() };
-    // redirect based on role
     const found = DEMO_ACCOUNTS.find((a) => a.email === email.trim());
     if (found?.role === 'Doctor') navigate('/doctor');
     else navigate('/patient');
+  };
+
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    setRegError('');
+    if (reg.password !== reg.confirm) { setRegError('Passwords do not match.'); return; }
+    if (reg.password.length < 6) { setRegError('Password must be at least 6 characters.'); return; }
+    setRegLoading(true);
+    await new Promise((r) => setTimeout(r, 600));
+    setRegLoading(false);
+    // After register, switch to login with prefilled email
+    setEmail(reg.email);
+    setPassword(reg.password);
+    setMode('login');
   };
 
   const fillDemo = (acc) => {
     setEmail(acc.email);
     setPassword(acc.password);
     setError('');
+  };
+
+  const switchMode = (m) => {
+    setMode(m);
+    setError('');
+    setRegError('');
   };
 
   return (
@@ -66,7 +93,6 @@ export default function LoginPage() {
           <p className="text-slate-500 leading-relaxed mb-8">
             Real-time tracking for patients. Live adherence dashboards for physicians. Better outcomes for everyone.
           </p>
-          {/* Feature pills */}
           <div className="flex flex-wrap gap-2">
             {['📱 Smart Reminders', '📊 Live Dashboard', '🔔 Missed Dose Alerts', '🔐 HIPAA Secure', '📈 Analytics'].map((f) => (
               <span key={f} className="text-xs bg-white border border-surface-200 text-slate-600 px-3 py-1.5 rounded-full shadow-card font-medium">{f}</span>
@@ -74,8 +100,9 @@ export default function LoginPage() {
           </div>
         </div>
 
-        {/* Right: login form */}
+        {/* Right: form card */}
         <div className="card p-8 shadow-xl">
+          {/* Mobile logo */}
           <div className="lg:hidden flex items-center gap-2 mb-6">
             <div className="w-9 h-9 rounded-xl bg-brand-500 flex items-center justify-center">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
@@ -85,63 +112,143 @@ export default function LoginPage() {
             <span className="font-display font-bold text-xl text-slate-800">MediTrack</span>
           </div>
 
-          <h2 className="font-display font-bold text-2xl text-slate-800 mb-1">Welcome back</h2>
-          <p className="text-sm text-slate-500 mb-6">Sign in to your account</p>
+          {/* Tab switcher */}
+          <div className="flex bg-surface-100 rounded-xl p-1 mb-6">
+            <button
+              onClick={() => switchMode('login')}
+              className={`flex-1 text-sm font-semibold py-2 rounded-lg transition-all duration-150 ${mode === 'login' ? 'bg-white text-slate-800 shadow-card' : 'text-slate-500 hover:text-slate-700'}`}
+            >
+              Sign In
+            </button>
+            <button
+              onClick={() => switchMode('register')}
+              className={`flex-1 text-sm font-semibold py-2 rounded-lg transition-all duration-150 ${mode === 'register' ? 'bg-white text-slate-800 shadow-card' : 'text-slate-500 hover:text-slate-700'}`}
+            >
+              Register
+            </button>
+          </div>
 
-          {error && (
-            <div className="flex items-center gap-2 bg-red-50 border border-red-200 text-red-700 text-sm px-4 py-3 rounded-xl mb-5">
-              <AlertCircle size={16} />
-              {error}
-            </div>
+          {/* LOGIN FORM */}
+          {mode === 'login' && (
+            <>
+              <h2 className="font-display font-bold text-2xl text-slate-800 mb-1">Welcome back</h2>
+              <p className="text-sm text-slate-500 mb-6">Sign in to your account</p>
+
+              {error && (
+                <div className="flex items-center gap-2 bg-red-50 border border-red-200 text-red-700 text-sm px-4 py-3 rounded-xl mb-5">
+                  <AlertCircle size={16} />
+                  {error}
+                </div>
+              )}
+
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div>
+                  <label className="label">Email Address</label>
+                  <input className="input" type="email" placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
+                </div>
+                <div>
+                  <label className="label">Password</label>
+                  <div className="relative">
+                    <input className="input pr-10" type={showPass ? 'text' : 'password'} placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} required />
+                    <button type="button" className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600" onClick={() => setShowPass((v) => !v)}>
+                      {showPass ? <EyeOff size={16} /> : <Eye size={16} />}
+                    </button>
+                  </div>
+                </div>
+                <button type="submit" disabled={loading} className="btn-primary w-full justify-center py-3 text-base">
+                  {loading ? (
+                    <span className="flex items-center gap-2"><svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="white" strokeWidth="4"/><path className="opacity-75" fill="white" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>Signing in…</span>
+                  ) : 'Sign In'}
+                </button>
+              </form>
+
+              {/* Demo accounts */}
+              <div className="mt-6 pt-5 border-t border-surface-100">
+                <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">Quick Demo Accounts</p>
+                <div className="space-y-2">
+                  {DEMO_ACCOUNTS.map((acc) => (
+                    <button
+                      key={acc.email}
+                      onClick={() => fillDemo(acc)}
+                      className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl border border-surface-200 hover:border-brand-300 hover:bg-brand-50 transition-all duration-150 group"
+                    >
+                      <div className="flex items-center gap-2.5">
+                        <div className={`w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold text-white ${acc.role === 'Doctor' ? 'bg-brand-500' : 'bg-violet-500'}`}>
+                          {acc.label.charAt(0)}
+                        </div>
+                        <div className="text-left">
+                          <div className="text-xs font-semibold text-slate-700">{acc.label}</div>
+                          <div className="text-xs text-slate-400">{acc.sub}</div>
+                        </div>
+                      </div>
+                      <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${acc.role === 'Doctor' ? 'bg-brand-100 text-brand-700' : 'bg-violet-100 text-violet-700'}`}>
+                        {acc.role}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="label">Email Address</label>
-              <input className="input" type="email" placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
-            </div>
-            <div>
-              <label className="label">Password</label>
-              <div className="relative">
-                <input className="input pr-10" type={showPass ? 'text' : 'password'} placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} required />
-                <button type="button" className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600" onClick={() => setShowPass((v) => !v)}>
-                  {showPass ? <EyeOff size={16} /> : <Eye size={16} />}
-                </button>
-              </div>
-            </div>
-            <button type="submit" disabled={loading} className="btn-primary w-full justify-center py-3 text-base">
-              {loading ? (
-                <span className="flex items-center gap-2"><svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="white" strokeWidth="4"/><path className="opacity-75" fill="white" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>Signing in…</span>
-              ) : 'Sign In'}
-            </button>
-          </form>
+          {/* REGISTER FORM */}
+          {mode === 'register' && (
+            <>
+              <h2 className="font-display font-bold text-2xl text-slate-800 mb-1">Create account</h2>
+              <p className="text-sm text-slate-500 mb-6">Register as a patient</p>
 
-          {/* Demo accounts */}
-          <div className="mt-6 pt-5 border-t border-surface-100">
-            <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">Quick Demo Accounts</p>
-            <div className="space-y-2">
-              {DEMO_ACCOUNTS.map((acc) => (
-                <button
-                  key={acc.email}
-                  onClick={() => fillDemo(acc)}
-                  className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl border border-surface-200 hover:border-brand-300 hover:bg-brand-50 transition-all duration-150 group"
-                >
-                  <div className="flex items-center gap-2.5">
-                    <div className={`w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold text-white ${acc.role === 'Doctor' ? 'bg-brand-500' : 'bg-violet-500'}`}>
-                      {acc.label.charAt(0)}
-                    </div>
-                    <div className="text-left">
-                      <div className="text-xs font-semibold text-slate-700">{acc.label}</div>
-                      <div className="text-xs text-slate-400">{acc.sub}</div>
-                    </div>
+              {regError && (
+                <div className="flex items-center gap-2 bg-red-50 border border-red-200 text-red-700 text-sm px-4 py-3 rounded-xl mb-5">
+                  <AlertCircle size={16} />
+                  {regError}
+                </div>
+              )}
+
+              <form onSubmit={handleRegister} className="space-y-4">
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="label">First Name</label>
+                    <input className="input" type="text" placeholder="Juan" value={reg.firstName} onChange={(e) => setReg({ ...reg, firstName: e.target.value })} required />
                   </div>
-                  <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${acc.role === 'Doctor' ? 'bg-brand-100 text-brand-700' : 'bg-violet-100 text-violet-700'}`}>
-                    {acc.role}
-                  </span>
+                  <div>
+                    <label className="label">Last Name</label>
+                    <input className="input" type="text" placeholder="dela Cruz" value={reg.lastName} onChange={(e) => setReg({ ...reg, lastName: e.target.value })} required />
+                  </div>
+                </div>
+                <div>
+                  <label className="label">Email Address</label>
+                  <input className="input" type="email" placeholder="you@example.com" value={reg.email} onChange={(e) => setReg({ ...reg, email: e.target.value })} required />
+                </div>
+                <div>
+                  <label className="label">Phone Number</label>
+                  <input className="input" type="tel" placeholder="+63 912 345 6789" value={reg.phone} onChange={(e) => setReg({ ...reg, phone: e.target.value })} required />
+                </div>
+                <div>
+                  <label className="label">Password</label>
+                  <div className="relative">
+                    <input className="input pr-10" type={showRegPass ? 'text' : 'password'} placeholder="Min. 6 characters" value={reg.password} onChange={(e) => setReg({ ...reg, password: e.target.value })} required />
+                    <button type="button" className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600" onClick={() => setShowRegPass((v) => !v)}>
+                      {showRegPass ? <EyeOff size={16} /> : <Eye size={16} />}
+                    </button>
+                  </div>
+                </div>
+                <div>
+                  <label className="label">Confirm Password</label>
+                  <input className="input" type="password" placeholder="Re-enter password" value={reg.confirm} onChange={(e) => setReg({ ...reg, confirm: e.target.value })} required />
+                </div>
+                <button type="submit" disabled={regLoading} className="btn-primary w-full justify-center py-3 text-base">
+                  {regLoading ? (
+                    <span className="flex items-center gap-2"><svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="white" strokeWidth="4"/><path className="opacity-75" fill="white" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>Creating account…</span>
+                  ) : 'Create Account'}
                 </button>
-              ))}
-            </div>
-          </div>
+              </form>
+
+              <p className="text-center text-xs text-slate-400 mt-4">
+                Already have an account?{' '}
+                <button onClick={() => switchMode('login')} className="text-brand-500 font-semibold hover:underline">Sign in</button>
+              </p>
+            </>
+          )}
         </div>
       </div>
     </div>
